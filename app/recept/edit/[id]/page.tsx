@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 
 const CATEGORIEËN = ['Snel', 'Comfort', 'Vegetarisch', 'Dagelijkse kost'];
-const TYPES_KEUKEN = ['Mexicaans', 'Vlaams', 'Aziatisch', 'Frans', 'Italiaans'];
+const TYPES_KEUKEN = ['Mexicaans', 'Vlaams', 'Aziatisch', 'Arabische keuken', 'Frans', 'Italiaans'];
 
 export default function EditReceptPage() {
   const router = useRouter();
