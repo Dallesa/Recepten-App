@@ -2,6 +2,7 @@ import { isAuthenticated } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { sql } from '@vercel/postgres';
 import Link from 'next/link';
+import ReceptFilter from '@/components/recept-filter';
 
 export const dynamic = 'force-dynamic';
 
@@ -54,26 +55,7 @@ export default async function HomePage() {
             </Link>
           </div>
         ) : (
-          <div className="space-y-4 mt-4">
-            {recepten.map((recept: any) => (
-              <Link key={recept.id} href={`/recept/${recept.id}`} className="block">
-                <div className="bg-white rounded-2xl shadow p-4 flex gap-4 items-center group hover:shadow-lg transition">
-                  {recept.afbeelding ? (
-                    <img src={recept.afbeelding} alt={recept.naam} className="w-20 h-20 object-cover rounded-xl" />
-                  ) : (
-                    <div className="w-20 h-20 bg-blue-100 rounded-xl flex items-center justify-center text-3xl">📖</div>
-                  )}
-                  <div className="flex-1">
-                    <h2 className="font-bold text-gray-800">{recept.naam}</h2>
-                    <p className="text-gray-500 text-sm">{recept.categorie || 'Geen categorie'} • {recept.type_keuken || 'Onbekend'}</p>
-                    {recept.bereidingstijd && (
-                      <p className="text-gray-600 text-sm mt-1">⏱️ {recept.bereidingstijd} minuten</p>
-                    )}
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+          <ReceptFilter recepten={recepten} />
         )}
       </main>
 
