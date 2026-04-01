@@ -10,6 +10,7 @@ export default function NieuwReceptPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>('');
+  const [uploadingFoto, setUploadingFoto] = useState(false);
   const [form, setForm] = useState({
     naam: '',
     ingrediënten: '',
@@ -19,6 +20,30 @@ export default function NieuwReceptPage() {
     afbeelding: '',
     notities: ''
   });
+
+  async function handleFotoUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingFoto(true);
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      
+      const res = await fetch('/api/fotos/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+      
+      if (!res.ok) {
+        throw new Error(data.error || 'Upload mislukt');
+      }
+      
+      setForm({...form, afbeelding: data.url});
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Foto upload mislukt');
+    } finally {
+      setUploadingFoto(false);
+    }
+  }
 
   async function handleSubmit() {
     setLoading(true);
@@ -68,12 +93,32 @@ export default function NieuwReceptPage() {
             onChange={e => setForm({...form, naam: e.target.value})}
             className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-900" 
           />
-          <input 
-            placeholder="Afbeelding URL" 
-            value={form.afbeelding} 
-            onChange={e => setForm({...form, afbeelding: e.target.value})}
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-900" 
-          />
+        </div>
+
+        <div className="bg-white rounded-2xl shadow p-4">
+          <h2 className="font-bold text-blue-800 mb-3">Afbeelding</h2>
+          {form.afbeelding ? (
+            <div className="space-y-3">
+              <img src={form.afbeelding} alt="Preview" className="w-full h-40 object-cover rounded-xl" />
+              <button 
+                onClick={() => setForm({...form, afbeelding: ''})}
+                className="w-full bg-red-100 text-red-700 px-4 py-2 rounded-xl hover:bg-red-200"
+              >
+                Verwijderen
+              </button>
+            </div>
+          ) : (
+            <label className="block">
+              <input 
+                type="file" 
+                accept="image/*" 
+                onChange={handleFotoUpload}
+                disabled={uploadingFoto}
+                className="w-full text-sm text-gray-500" 
+              />
+              {uploadingFoto && <p className="text-blue-600 text-sm mt-2">Uploading...</p>}
+            </label>
+          )}
         </div>
 
         <div className="bg-white rounded-2xl shadow p-4 space-y-3">
@@ -96,20 +141,28 @@ export default function NieuwReceptPage() {
             onChange={e => setForm({...form, bereidingstijd: e.target.value})}
             className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-900" 
           />
-          <select 
-            value={form.categorie} 
-            onChange={e => setForm({...form, categorie: e.target.value})}
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-900"
-          >
-            {CATEGORIEËN.map(c => <option key={c}>{c}</option>)}
-          </select>
-          <select 
-            value={form.type_keuken} 
-            onChange={e => setForm({...form, type_keuken: e.target.value})}
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-900"
-          >
-            {TYPES_KEUKEN.map(t => <option key={t}>{t}</option>)}
-          </select>
+          
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Categorie</label>
+            <select 
+              value={form.categorie} 
+              onChange={e => setForm({...form, categorie: e.target.value})}
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-900"
+            >
+              {CATEGORIEËN.map(c => <option key={c}>{c}</option>)}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Type Keuken</label>
+            <select 
+              value={form.type_keuken} 
+              onChange={e => setForm({...form, type_keuken: e.target.value})}
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-900"
+            >
+              {TYPES_KEUKEN.map(t => <option key={t}>{t}</option>)}
+            </select>
+          </div>
         </div>
 
         <div className="bg-white rounded-2xl shadow p-4">
