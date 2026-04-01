@@ -31,4 +31,21 @@ export async function createTables() {
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS recepten (
+      id SERIAL PRIMARY KEY,
+      naam VARCHAR(255) NOT NULL,
+      beschrijving TEXT,
+      ingrediënten TEXT NOT NULL,
+      bereidingswijze TEXT NOT NULL,
+      bereidingstijd INTEGER,
+      aantal_personen INTEGER,
+      moeilijkheidsgraad VARCHAR(50),
+      afbeelding VARCHAR(255),
+      notities TEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `;
 }

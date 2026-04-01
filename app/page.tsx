@@ -32,13 +32,13 @@ export default async function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-green-50">
-      <header className="bg-green-700 text-white p-4 flex items-center justify-between">
+    <div className="min-h-screen bg-blue-50">
+      <header className="bg-blue-700 text-white p-4 flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold">🏕️ Onze Campings</h1>
-          <p className="text-green-100 text-sm mt-1">{campings.length} bezochte campings</p>
+          <h1 className="text-xl font-bold">📖 Onze Recepten</h1>
+          <p className="text-blue-100 text-sm mt-1">{campings.length} recepten</p>
         </div>
-        <Link href="/camping/nieuw" className="bg-white text-green-700 font-semibold px-4 py-2 rounded-xl text-sm">
+        <Link href="/camping/nieuw" className="bg-white text-blue-700 font-semibold px-4 py-2 rounded-xl text-sm">
           + Toevoegen
         </Link>
       </header>
@@ -52,10 +52,10 @@ export default async function HomePage() {
           </div>
         ) : campings.length === 0 ? (
           <div className="text-center text-gray-400 mt-20">
-            <div className="text-5xl mb-4">🏕️</div>
-            <p>Nog geen campings toegevoegd</p>
-            <Link href="/camping/nieuw" className="text-green-600 font-semibold mt-2 inline-block">
-              Voeg je eerste camping toe
+            <div className="text-5xl mb-4">📖</div>
+            <p>Nog geen recepten toegevoegd</p>
+            <Link href="/camping/nieuw" className="text-blue-600 font-semibold mt-2 inline-block">
+              Voeg je eerste recept toe
             </Link>
           </div>
         ) : (
@@ -65,7 +65,7 @@ export default async function HomePage() {
 
       
 <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex">
-        <Link href="/" className="flex-1 py-4 text-center text-green-700 font-semibold text-sm">🏕️ Lijst</Link>
+        <Link href="/" className="flex-1 py-4 text-center text-blue-700 font-semibold text-sm">📖 Recepten</Link>
       </nav>
 
     </div>
