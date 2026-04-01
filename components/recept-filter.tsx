@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { addIngredientsToList } from '@/lib/shopping-list';
 
 interface ReceptFilterProps {
   recepten: any[];
@@ -10,6 +11,7 @@ interface ReceptFilterProps {
 export default function ReceptFilter({ recepten }: ReceptFilterProps) {
   const [selectedCategorie, setSelectedCategorie] = useState<string | null>(null);
   const [selectedTypeKeuken, setSelectedTypeKeuken] = useState<string | null>(null);
+  const [addedRecipes, setAddedRecipes] = useState<Set<number>>(new Set());
 
   // Get unique categories and types
   const categories = useMemo(() => {
@@ -34,12 +36,17 @@ export default function ReceptFilter({ recepten }: ReceptFilterProps) {
     return result;
   }, [recepten, selectedCategorie, selectedTypeKeuken]);
 
+  function handleAddToList(e: React.MouseEvent, receptId: number, ingredients: string) {
+    e.preventDefault();
+    addIngredientsToList(ingredients);
+    setAddedRecipes(new Set([...addedRecipes, receptId]));
+  }
+
   return (
     <>
       {/* Category Filter */}
       {categories.length > 0 && (
         <div className="mb-4">
-          <p className="text-sm font-semibold text-gray-700 mb-2">Categorie</p>
           <div className="flex overflow-x-auto gap-2 pb-2">
             <button
               onClick={() => setSelectedCategorie(null)}
@@ -71,7 +78,6 @@ export default function ReceptFilter({ recepten }: ReceptFilterProps) {
       {/* Kitchen Type Filter */}
       {typesKeuken.length > 0 && (
         <div className="mb-4">
-          <p className="text-sm font-semibold text-gray-700 mb-2">Type Keuken</p>
           <div className="flex overflow-x-auto gap-2 pb-4">
             <button
               onClick={() => setSelectedTypeKeuken(null)}
@@ -122,6 +128,16 @@ export default function ReceptFilter({ recepten }: ReceptFilterProps) {
                     <p className="text-gray-600 text-sm mt-1">⏱️ {recept.bereidingstijd} minuten</p>
                   )}
                 </div>
+                <button
+                  onClick={(e) => handleAddToList(e, recept.id, recept.ingrediënten)}
+                  className={`p-2 rounded-lg font-semibold transition ${
+                    addedRecipes.has(recept.id)
+                      ? 'bg-blue-100 text-blue-700'
+                      : 'bg-gray-100 text-gray-600 hover:bg-blue-100 hover:text-blue-700'
+                  }`}
+                >
+                  {addedRecipes.has(recept.id) ? '✓' : '🛒'}
+                </button>
               </div>
             </Link>
           ))

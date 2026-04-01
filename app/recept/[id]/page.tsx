@@ -2,6 +2,7 @@ import { isAuthenticated } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { sql } from '@vercel/postgres';
 import Link from 'next/link';
+import AddToShoppingListButton from '@/components/add-to-shopping-list';
 
 export default async function ReceptDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const auth = await isAuthenticated();
@@ -89,7 +90,17 @@ export default async function ReceptDetailPage({ params }: { params: Promise<{ i
             <p className="text-gray-700">{recept.notities}</p>
           </div>
         )}
+
+        {/* Add to Shopping List Button */}
+        <div className="bg-white rounded-2xl shadow p-4 mb-4">
+          <AddToShoppingListButton ingredients={recept.ingrediënten} />
+        </div>
       </main>
+
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex">
+        <Link href="/" className="flex-1 py-4 text-center text-blue-700 font-semibold text-sm">📖 Recepten</Link>
+        <Link href="/boodschappenlijst" className="flex-1 py-4 text-center text-blue-700 font-semibold text-sm">🛒 Boodschappen</Link>
+      </nav>
     </div>
   );
 }
